@@ -1,0 +1,39 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/plean-fe/node_modules
+/plean-fe//.pnp
+/plean-fe/.pnp.js
+/plean-fe/.yarn/install-state.gz
+
+# testing
+/plean-fe/coverage
+
+# next.js
+/plean-fe/.next/
+/plean-fe/out/
+
+# production
+/plean-fe/build
+
+# misc
+/plean-fe/.DS_Store
+/plean-fe/*.pem
+
+# debug
+/plean-fe/npm-debug.log*
+/plean-fe/yarn-debug.log*
+/plean-fe/yarn-error.log*
+
+# local env files
+/plean-fe/.env*.local
+
+# vercel
+/plean-fe/.vercel
+
+# typescript
+/plean-fe/*.tsbuildinfo
+/plean-fe/next-env.d.ts
+
+/plean-be/.venv
+/plean-be/__pycache__

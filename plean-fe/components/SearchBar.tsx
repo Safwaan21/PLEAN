@@ -1,27 +1,41 @@
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
-import AIMessage from "@/components/AIMessage";
 
-export default function SearchBar() {
+export default function SearchBar({
+  setQuery,
+}: {
+  setQuery: (query: string) => void;
+}) {
   const [inputValue, setInputValue] = useState("");
-  const [messages, setMessages] = useState<string[]>([]);
-  // This is the function that will be called when the form is submitted. Reset the input value field
-  // and prevent the default form submission.
+  const handleSearch = () => {
+    setQuery(inputValue);
+    setInputValue("");
+  };
+
+  const handleTextareaKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
 
   return (
-    <div className="bg-gray-100 items-end rounded-xl flex p-2 m-5 w-full max-w-2xl">
+    <div className=" items-end rounded-xl flex p-2 m-5 w-full max-w-2xl border border-gray-200 dark:border-gray-700">
       <TextareaAutosize
         placeholder="Ask anything..."
         value={inputValue}
-        onChange={(event) => setInputValue(event.target.value)}
+        onChange={(e) => setInputValue(e.currentTarget.value)}
+        onKeyDown={handleTextareaKeyDown}
         className="self-center bg-transparent w-full focus:outline-none resize-none max-h-[200px]"
       />
       <Button
-        className="bg-black rounded-full"
+        className=" rounded-full"
         disabled={inputValue.length === 0}
+        onClick={handleSearch}
       >
         <Search />
       </Button>
