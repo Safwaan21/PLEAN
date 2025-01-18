@@ -11,7 +11,6 @@ export default function SearchBar({
   const [inputValue, setInputValue] = useState("");
   const handleSearch = () => {
     setQuery(inputValue);
-    setInputValue("");
   };
 
   const handleTextareaKeyDown = (
