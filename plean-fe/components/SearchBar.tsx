@@ -24,16 +24,16 @@ export default function SearchBar({
   };
 
   return (
-    <div className=" items-end rounded-xl flex p-2 m-5 w-full max-w-2xl border border-gray-200 dark:border-gray-700">
+    <div className=" rounded-xl flex p-2 mr-5 w-full max-w-2xl border border-gray-200 dark:border-gray-700">
       <TextareaAutosize
         placeholder="Ask anything..."
         value={inputValue}
         onChange={(e) => setInputValue(e.currentTarget.value)}
         onKeyDown={handleTextareaKeyDown}
-        className="self-center bg-transparent w-full focus:outline-none resize-none max-h-[200px]"
+        className="ml-2 self-center bg-transparent w-full focus:outline-none resize-none max-h-[200px]"
       />
       <Button
-        className=" rounded-full"
+        className="ml-3 rounded-full"
         disabled={inputValue.length === 0}
         onClick={handleSearch}
       >
