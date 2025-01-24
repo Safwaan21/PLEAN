@@ -1,55 +1,29 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import time
+from drive_service import search_google_drive
+from auth import get_google_auth_url, handle_google_callback
+from config import ALLOWED_ORIGINS
+from schemas import FilesResponse
+
 app = FastAPI()
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Your Next.js frontend origin
-    allow_credentials=True,  # Allow cookies or authentication
-    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allow all HTTP headers
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-mock_result = {
-    "num_results": "3",
-    "results": [
-        {
-        "type": "gdoc",
-        "link": "https://docs.google.com",
-        "name": "Document 1",
-        "owner": "John Doe",
-        "description": """
-        This is a document about the history of the internet.
-        This is a document about the history of the internet. 
-        This is a document about the history of the internet.
-        This is a document about the history of the internet.
-        This is a document about the history of the internet. 
-        This is a document about the history of the internet.
-        """,
-        "creation_date": "2021-09-01",
-        },
-        {
-        "type": "gdoc",
-        "link": "https://docs.google.com",
-        "name": "Document 2",
-        "owner": "Jane Smith",
-        "description": "This is a document about the history of the internet as well.",
-        "creation_date": "2021-09-02",
-        },
-        {
-        "type": "gslide",
-        "link": "https://slides.google.com",
-        "name": "Presentation 1",
-        "owner": "John Doe",
-        "description": "This is a presentation about the history of the internet.",
-        "creation_date": "2021-09-03",
-        }
-    ],
-}
+@app.get("/search", response_model=FilesResponse)
+def search(q: str):
+    return search_google_drive("test_user", q)
 
-@app.get("/")
-def root():
-    time.sleep(2)
-    return {"search_results": mock_result}
+@app.get("/auth/google")
+async def google_login():
+    return {"auth_uri": get_google_auth_url()}
+
+@app.get("/auth/google/callback")
+async def google_callback(code: str, state: str = None):
+    return handle_google_callback(code)
