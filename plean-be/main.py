@@ -17,8 +17,8 @@ app.add_middleware(
 )
 
 @app.get("/search", response_model=FilesResponse)
-def search(q: str):
-    return search_google_drive("test_user", q)
+def search(q: str, token: str):
+    return search_google_drive(q, token)
 
 @app.get("/auth/google")
 async def google_login():

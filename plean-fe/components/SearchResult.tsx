@@ -3,9 +3,13 @@ import Image from "next/image";
 
 export default function SearchResult({ result }: { result: Result }) {
   const iconMapping: { [key: string]: string } = {
-    gdoc: "/gdoc.png",
-    gslide: "/gslide.png",
+    "application/vnd.google-apps.document": "/gdoc.png",
+    "application/vnd.google-apps.presentation": "/gslide.png",
   };
+
+  if (!iconMapping[result.type]) {
+    return null;
+  }
 
   return (
     <div

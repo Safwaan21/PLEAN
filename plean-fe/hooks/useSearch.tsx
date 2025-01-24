@@ -10,14 +10,29 @@ export default function useSearch(query: string, isAuthenticated: boolean) {
 
     const fetchData = async () => {
       setLoading(true);
-      setResults([]);
 
       try {
-        const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`);
+        const res = await fetch(
+          `http://127.0.0.1:8000/search?q=${query}&token=${localStorage.getItem(
+            "authToken"
+          )}`
+        );
         if (!res.ok) throw new Error(`Error: ${res.statusText}`);
 
         const data = await res.json();
-        setResults(data);
+        // updates results to be an array of Result from data
+        const newData = data["files"].map((result: Result) => {
+          return {
+            name: result.name,
+            link: result.link,
+            type: result.type,
+            owner: result.owner,
+            owner_photo: result.owner_photo,
+            description: result.description,
+            modified_date: new Date(result.modified_date),
+          };
+        });
+        setResults(newData);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {

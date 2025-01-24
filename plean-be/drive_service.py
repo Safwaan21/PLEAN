@@ -3,20 +3,13 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from fastapi import HTTPException
 from session_manager import SessionManager
-
+from schemas import FileResponse
 session_manager = SessionManager()
 
-def search_google_drive(user_id: str, query: str, limit: int = 20):
-    creds_data = session_manager.get_user_credentials(user_id)
-    if not creds_data:
-        raise HTTPException(status_code=401, detail="User is not authenticated")
+def search_google_drive(query: str, auth_token, limit: int = 20):
 
     creds = Credentials(
-        creds_data['access_token'],
-        refresh_token=creds_data['refresh_token'],
-        token_uri=creds_data['token_uri'],
-        client_id=creds_data['client_id'],
-        client_secret=creds_data['client_secret']
+        token=auth_token,
     )
 
     try:
@@ -27,22 +20,22 @@ def search_google_drive(user_id: str, query: str, limit: int = 20):
             orderBy="modifiedTime desc"
         ).execute()
 
-        files = results.get('files', [])
-        return {
-            "num_results": len(files),
-            "results": [
-                {
-                    "name": file["name"],
-                    "link": f"https://drive.google.com/file/d/{file['id']}",
-                    "type": file["mimeType"],
-                    "owner": file["owners"][0]["displayName"],
-                    "owner_photo": file["owners"][0]["photoLink"],
-                    "description": "Description: N/A",
-                    "modified_date": file["modifiedTime"],
-                }
-                for file in files if file["mimeType"] != "application/vnd.google-apps.folder"
+        result_files = results.get('files', [])
+        response = [  # <--- This line should be fixed
+                FileResponse(
+                    name=file["name"],
+                    link=f"https://drive.google.com/file/d/{file['id']}",
+                    type=file["mimeType"],
+                    owner=file["owners"][0]["displayName"],
+                    owner_photo=file["owners"][0]["photoLink"],
+                    description="Description: N/A",
+                    modified_date=file["modifiedTime"],
+                )
+                for file in result_files if file["mimeType"] != "application/vnd.google-apps.folder"
             ][:limit]
+        
+        return {
+            'files': response
         }
-
     except HttpError as error:
         raise HTTPException(status_code=500, detail=f"An error occurred: {error}")
