@@ -37,9 +37,6 @@ export default function SearchResult({ result }: { result: Result }) {
           <p className="font-normal">{result.owner}</p>
         </div>
         <p>{result.description}</p>
-        <a href={result.link} target="_blank" rel="noreferrer">
-          {result.link}
-        </a>
       </div>
     </div>
   );

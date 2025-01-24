@@ -32,6 +32,9 @@ export default function useSearch(query: string, isAuthenticated: boolean) {
             modified_date: new Date(result.modified_date),
           };
         });
+        newData.sort((a: Result, b: Result) => {
+          return b.modified_date.getTime() - a.modified_date.getTime();
+        });
         setResults(newData);
       } catch (error) {
         console.error("Error fetching data:", error);

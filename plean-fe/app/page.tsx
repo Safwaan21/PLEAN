@@ -35,7 +35,7 @@ export default function Home() {
         <DarkMode />
       </div>
       {loading && <LoadingLines />}
-      <div className="flex-col mt-[80px]">
+      <div className="flex-col mt-[60px]">
         {results.map((result: Result, index: Key | null | undefined) => (
           <SearchResult key={index} result={result} />
         ))}
