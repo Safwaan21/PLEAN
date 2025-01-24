@@ -29,7 +29,7 @@ export default function SearchResult({ result }: { result: Result }) {
       <div>
         <h1 className="text-blue-500 text-2xl font-bold">{result.name}</h1>
         <div className="flex font-thin text-xs">
-          <p className="mr-3">{result.creation_date.toString()}</p>
+          <p className="mr-3">{result.modified_date.toString()}</p>
           <p className="font-normal">{result.owner}</p>
         </div>
         <p>{result.description}</p>

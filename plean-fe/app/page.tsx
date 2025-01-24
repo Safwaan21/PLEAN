@@ -1,25 +1,32 @@
 "use client";
 
-import SearchBar from "../components/SearchBar";
+import SearchBar from "@/components/SearchBar";
 import { DarkMode } from "@/components/DarkMode";
 import LoadingLines from "@/components/LoadingLines";
 import SearchResult from "@/components/SearchResult";
+import { Button } from "@/components/ui/button";
+import useAuth from "@/hooks/useAuth";
 import { useState, useEffect } from "react";
-
 export type Result = {
-  type: string;
-  link: string;
   name: string;
+  link: string;
+  type: string;
   owner: string;
+  owner_photo: string;
   description: string;
-  creation_date: Date;
+  modified_date: Date;
 };
 
 export default function Home() {
+  const { isAuthenticated, logout } = useAuth();
   const [query, setQuery] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [results, setResults] = useState<Array<Result>>([]);
+
   useEffect(() => {
+    if (!isAuthenticated) {
+      return;
+    }
     if (!query) {
       return;
     }
@@ -29,13 +36,10 @@ export default function Home() {
     // fetch results
     const fetchData = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/");
-        const data = await res.json();
-        const newResults = data["search_results"]["results"];
-        const newResultsArray = newResults.map(
-          (fetchResult: Result) => fetchResult
-        );
-        setResults(newResultsArray);
+        const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`);
+        if (!res.ok) {
+          console.log("Error fetching data: ", res.statusText);
+        }
       } catch (error) {
         console.error("Error fetching data: ", error);
       } finally {
@@ -43,7 +47,23 @@ export default function Home() {
       }
     };
     fetchData();
-  }, [query]);
+  }, [query, isAuthenticated]);
+
+  if (!isAuthenticated) {
+    return <Button onClick={handleGoogleLoginClick}>Google Login</Button>;
+  }
+  async function handleGoogleLoginClick() {
+    try {
+      const response = await fetch("http://localhost:8000/auth/google");
+      if (!response.ok) {
+        console.log("Error fetching data: ", response.statusText);
+      }
+      const data = await response.json();
+      window.location.href = data["auth_uri"] as string;
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  }
 
   return (
     <div className="m-5">
@@ -51,6 +71,7 @@ export default function Home() {
         <SearchBar setQuery={setQuery} />
         <DarkMode />
       </div>
+      <Button onClick={logout}>Logout</Button>
       {loading && <LoadingLines />}
       <div className="flex-col mt-[80px]">
         {results.map((result, index) => (
