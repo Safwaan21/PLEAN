@@ -4,10 +4,11 @@ import SearchBar from "@/components/SearchBar";
 import { DarkMode } from "@/components/DarkMode";
 import LoadingLines from "@/components/LoadingLines";
 import SearchResult from "@/components/SearchResult";
-import { Button } from "@/components/ui/button";
 import useAuth from "@/hooks/useAuth";
-import { useState, useEffect } from "react";
+import { Key, useState } from "react";
+import useSearch from "@/hooks/useSearch";
 import Login from "@/components/Login";
+
 export type Result = {
   name: string;
   link: string;
@@ -19,40 +20,14 @@ export type Result = {
 };
 
 export default function Home() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, isLoginloading } = useAuth();
   const [query, setQuery] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [results, setResults] = useState<Array<Result>>([]);
+  const { loading, results } = useSearch(query, isAuthenticated);
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      return;
-    }
-    if (!query) {
-      return;
-    }
-    setResults([]);
-    setLoading(true);
-
-    // fetch results
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`http://127.0.0.1:8000/search?q=${query}`);
-        if (!res.ok) {
-          console.log("Error fetching data: ", res.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [query, isAuthenticated]);
-
-  if (!isAuthenticated) {
+  if (!isAuthenticated && !isLoginloading) {
     return <Login />;
   }
+
   return (
     <div className="m-5">
       <div className="flex justify-between w-full">
@@ -61,7 +36,7 @@ export default function Home() {
       </div>
       {loading && <LoadingLines />}
       <div className="flex-col mt-[80px]">
-        {results.map((result, index) => (
+        {results.map((result: Result, index: Key | null | undefined) => (
           <SearchResult key={index} result={result} />
         ))}
       </div>

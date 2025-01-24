@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 export default function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoginloading, setIsLoginloading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -14,6 +15,7 @@ export default function useAuth() {
     } else {
       router.push("/");
     }
+    setIsLoginloading(false);
   }, [router]);
 
   const logout = () => {
@@ -22,5 +24,5 @@ export default function useAuth() {
     router.push("/");
   };
 
-  return { isAuthenticated, logout };
+  return { isAuthenticated, isLoginloading, logout };
 }
