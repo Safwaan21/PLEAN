@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Result } from "../app/page";
+import { API_URL } from "@/lib/constants";
 
 export default function useSearch(query: string, isAuthenticated: boolean) {
   const [results, setResults] = useState<Result[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
   useEffect(() => {
     if (!isAuthenticated || !query) return;
 
@@ -13,7 +13,7 @@ export default function useSearch(query: string, isAuthenticated: boolean) {
 
       try {
         const res = await fetch(
-          `http://127.0.0.1:8000/search?q=${query}&token=${localStorage.getItem(
+          `${API_URL}/search?q=${query}&token=${localStorage.getItem(
             "authToken"
           )}`
         );

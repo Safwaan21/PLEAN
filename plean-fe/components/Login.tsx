@@ -1,10 +1,10 @@
 import { Button } from "./ui/button";
 import Image from "next/image";
-
+import { URL } from "@/lib/constants";
 export default function Login() {
   async function handleGoogleLoginClick() {
     try {
-      const response = await fetch("http://localhost:8000/auth/google");
+      const response = await fetch(`${URL}/auth/google`);
       if (!response.ok) {
         console.log("Error fetching data: ", response.statusText);
       }
