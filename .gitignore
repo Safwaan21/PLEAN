@@ -37,3 +37,6 @@
 
 /plean-be/.venv
 /plean-be/__pycache__
+
+/plean-be/client_id.json
+/plean-be/user_data.db
