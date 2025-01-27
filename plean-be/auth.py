@@ -4,6 +4,9 @@ from config import CLIENT_SECRETS_FILE, SCOPES, REDIRECT_URI
 from session_manager import SessionManager
 import google.auth.transport.requests
 from google.oauth2 import id_token
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
+from constants import FE_URL
 session_manager = SessionManager()
 
 def get_google_auth_url():
@@ -31,4 +34,13 @@ def handle_google_callback(code: str):
         credentials.client_id
     )
     session_manager.store_google_drive_credentials(id_info["sub"], credentials)
-    return RedirectResponse(f"http://localhost:3000/auth?token={credentials.token}")
+    return RedirectResponse(f"{FE_URL}/auth?token={credentials.token}")
+
+def refresh_access_token(refresh_token):
+    creds = Credentials(
+        None,
+        refresh_token=refresh_token,
+        token_uri="https://oauth2.googleapis.com/token",
+    )
+    creds.refresh(Request())
+    return creds.token
