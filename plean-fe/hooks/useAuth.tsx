@@ -20,6 +20,7 @@ export default function useAuth() {
 
   const logout = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("user_id");
     setIsAuthenticated(false);
     router.push("/");
   };

@@ -8,10 +8,11 @@ export default function Auth() {
 
   useEffect(() => {
     const token = searchParams.get("token");
-
+    const user_id = searchParams.get("user_id");
     if (token) {
       // Store token securely
       localStorage.setItem("authToken", token as string);
+      localStorage.setItem("user_id", user_id as string);
       window.location.href = "/";
     }
   }, [searchParams]);

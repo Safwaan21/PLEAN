@@ -15,11 +15,16 @@ export default function useSearch(query: string, isAuthenticated: boolean) {
         const res = await fetch(
           `${API_URL}/search?q=${query}&token=${localStorage.getItem(
             "authToken"
-          )}`
+          )}&user_id=${localStorage.getItem("user_id")}`
         );
         if (!res.ok) throw new Error(`Error: ${res.statusText}`);
 
         const data = await res.json();
+        // check if a new auth token is returned
+        if (data["new_auth_token"]) {
+          localStorage.setItem("authToken", data["new_auth_token"]);
+        }
+
         // updates results to be an array of Result from data
         const newData = data["files"].map((result: Result) => {
           return {

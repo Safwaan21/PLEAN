@@ -21,7 +21,7 @@ export type Result = {
 };
 
 export default function Home() {
-  const { isAuthenticated, isLoginloading } = useAuth();
+  const { isAuthenticated, isLoginloading, logout } = useAuth();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [query, setQuery] = useState<string>(searchParams.get("query") || "");
@@ -46,6 +46,9 @@ export default function Home() {
 
   return (
     <div className="m-5">
+      <button onClick={logout} className="text-blue-500">
+        asd
+      </button>
       {query && (
         <div className="flex justify-between w-full">
           <SearchBar setQuery={setQuery} initialQuery={query} />
