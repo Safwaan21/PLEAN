@@ -1,14 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 export default function SearchBar({
   setQuery,
+  initialQuery = "",
 }: {
   setQuery: (query: string) => void;
+  initialQuery?: string;
 }) {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(initialQuery);
+
   const handleSearch = () => {
     setQuery(inputValue);
   };
@@ -22,8 +25,12 @@ export default function SearchBar({
     }
   };
 
+  useEffect(() => {
+    setInputValue(initialQuery); // Update inputValue when initialQuery changes
+  }, [initialQuery]);
+
   return (
-    <div className=" rounded-xl flex p-2 mr-5 w-full max-w-2xl border border-gray-200 dark:border-gray-700">
+    <div className="rounded-xl flex p-2 mr-5 w-full max-w-2xl border border-gray-200 dark:border-gray-700">
       <TextareaAutosize
         placeholder="Ask anything..."
         value={inputValue}
