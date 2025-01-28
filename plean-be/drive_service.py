@@ -4,13 +4,20 @@ from googleapiclient.errors import HttpError
 from fastapi import HTTPException
 from session_manager import SessionManager
 from schemas import FileResponse
+from google.auth.transport.requests import Request
 session_manager = SessionManager()
 
-def search_google_drive(query: str, auth_token, limit: int = 20):
-
+def search_google_drive(query, auth_token, user_id, limit: int = 20):
     creds = Credentials(
         token=auth_token,
     )
+    result = {}
+    if creds.expired:
+        _, refresh_token = session_manager.get_google_drive_credentials(user_id)
+        new_access_token = refresh_access_token(refresh_token)
+        creds.token = new_access_token
+        session_manager.store_google_drive_credentials(user_id, new_access_token, refresh_token)
+        result['new_auth_token'] = new_access_token
 
     try:
         service = build('drive', 'v3', credentials=creds)
@@ -33,9 +40,16 @@ def search_google_drive(query: str, auth_token, limit: int = 20):
                 )
                 for file in result_files if file["mimeType"] != "application/vnd.google-apps.folder"
             ][:limit]
-        
-        return {
-            'files': response
-        }
+        result['files'] = response
+        return result
     except HttpError as error:
         raise HTTPException(status_code=500, detail=f"An error occurred: {error}")
+
+def refresh_access_token(refresh_token):
+    creds = Credentials(
+        None,
+        refresh_token=refresh_token,
+        token_uri="https://oauth2.googleapis.com/token",
+    )
+    creds.refresh(Request())
+    return creds.token

@@ -11,10 +11,11 @@ class UserCredentials(Base):
     __tablename__ = "user_credentials"
     
     user_id = Column(String, primary_key=True, index=True)
-    google_drive_credentials = Column(
-        JSON, 
+    auth_token = Column(String, nullable=False, comment="Stores Google Drive auth token")
+    refresh_token = Column(
+        String, 
         nullable=False,
-        comment="Stores Google Drive refresh_token"
+        comment="Stores Google Drive refresh token"
     )    
 
 Base.metadata.create_all(bind=engine)

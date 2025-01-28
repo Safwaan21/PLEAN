@@ -32,3 +32,4 @@ class FileResponse(BaseModel):
 
 class FilesResponse(BaseModel):
     files: Set[FileResponse]
+    new_auth_token: str = None
