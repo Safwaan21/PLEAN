@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import useSearch from "@/hooks/useSearch";
 import Login from "@/components/Login";
 import { useRouter, useSearchParams } from "next/navigation";
+import PersonalInfo from "@/components/PersonalInfo";
 
 export type Result = {
   name: string;
@@ -46,19 +47,20 @@ export default function Home() {
 
   return (
     <div className="m-5">
-      <button onClick={logout} className="text-blue-500">
-        asd
-      </button>
       {query && (
         <div className="flex justify-between w-full">
           <SearchBar setQuery={setQuery} initialQuery={query} />
-          <DarkMode />
+          <div className="flex items-center gap-5">
+            <DarkMode />
+            <PersonalInfo logout={logout} />
+          </div>
         </div>
       )}
       {!query && (
         <div className="flex flex-col h-full w-full">
-          <div className="self-end">
+          <div className="flex self-end gap-5">
             <DarkMode />
+            <PersonalInfo logout={logout} />
           </div>
           <div className="pt-[20%] flex flex-col items-center">
             <h1 className="text-4xl font-bold mb-5">Plean</h1>
