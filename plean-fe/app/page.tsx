@@ -43,11 +43,13 @@ export default function Home() {
 
   if (!isAuthenticated && !isLoginloading) {
     return (
-      <div className="m-5">
+      <div className="m-5 h-full">
         <div className="flex justify-end w-full">
           <DarkMode />
         </div>
-        <Login />
+        <div className="mt-[20%]">
+          <Login />
+        </div>
       </div>
     );
   }
