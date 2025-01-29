@@ -42,7 +42,14 @@ export default function Home() {
   }
 
   if (!isAuthenticated && !isLoginloading) {
-    return <Login />;
+    return (
+      <div className="m-5">
+        <div className="flex justify-end w-full">
+          <DarkMode />
+        </div>
+        <Login />
+      </div>
+    );
   }
 
   return (
