@@ -15,7 +15,8 @@ export default function Login() {
     }
   }
   return (
-    <div className="flex items-center justify-center w-full min-h-screen p-8">
+    <div className="flex flex-col items-center justify-center w-screen min-h-screen p-8">
+      <h1 className="text-4xl font-bold mb-5 hover:text-purple-800">Plean</h1>
       <Button
         className="p-8 flex items-center justify-center text-lg font-semibold rounded-lg shadow-md"
         onClick={handleGoogleLoginClick}

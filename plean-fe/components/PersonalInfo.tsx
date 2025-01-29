@@ -15,7 +15,7 @@ export default function PersonalInfo({ logout }: { logout: () => void }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="h-full p-4 ">
+        <Button variant="outline" className="h-[54px] flex-shrink-0">
           <User className="h-[2.1rem] w-[2.1rem] scale-100 transition-all" />
         </Button>
       </DropdownMenuTrigger>
